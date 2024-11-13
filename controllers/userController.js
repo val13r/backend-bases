@@ -98,3 +98,29 @@ exports.EliminarUsuario = (req, res) => {
     }
   });
 };
+
+exports.LoginUsuario = (req, res) => {
+  const { Correo_Electronico, Contraseña } = req.body;
+  if (!Correo_Electronico || !Contraseña) {
+    return res.status(400).json({ error: 'Correo electrónico y contraseña son obligatorios' });
+  }
+  const query = 'SELECT * FROM Usuario WHERE Correo_Electronico = ?';
+  db.query(query, [Correo_Electronico], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    const usuario = results[0];
+    bcrypt.compare(Contraseña, usuario.Contraseña, (err, isMatch) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error al verificar la contraseña' });
+      }
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Contraseña incorrecta' });
+      }
+      res.status(200).json({ mensaje: 'Inicio de sesión exitoso', usuario: { ID_Usuario: usuario.ID_Usuario, Nombre: usuario.Nombre, Correo_Electronico: usuario.Correo_Electronico, Rol: usuario.Rol } });
+    });
+  });
+};

@@ -10,5 +10,6 @@ router.get('/areas', categoriaAreaController.ObtenerTodasAreas);
 
 router.post('/categoria',  categoriaAreaController.CrearCategoria);
 router.get('/categorias', categoriaAreaController.ObtenerTodasCategorias);
+router.get('/categorias/area/:ID_Area', categoriaAreaController.ObtenerCategoriasPorIdArea);
 
 module.exports = router;

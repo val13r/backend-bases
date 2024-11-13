@@ -5,6 +5,7 @@ const userController = require('../controllers/userController');
 
 router.get('/', userController.ObtenerTodosUsuario);
 router.post('/', userController.CrearUsuario);
+router.post('/login', userController.LoginUsuario);
 router.get('/:ID_Usuario', userController.ObtenerUsuarioPorId);
 router.put('/:ID_Usuario', userController.ActualizarUsuario);
 router.delete('/:ID_Usuario', userController.EliminarUsuario);

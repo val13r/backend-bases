@@ -76,18 +76,25 @@ exports.ObtenerRecursoPorId = (req, res) => {
 
 exports.EliminarRecurso = (req, res) => {
   const { id } = req.params;
-  const query = 'DELETE FROM Recurso_Educativo WHERE ID_Recurso = ?';
-  db.query(query, [id], (err, results) => {
+
+  const queryDeleteCategorias = 'DELETE FROM Recurso_Categoria WHERE ID_Recurso = ?';
+  db.query(queryDeleteCategorias, [id], (err) => {
     if (err) {
-      res.status(500).json({ error: err.message });
-    } else if (results.affectedRows === 0) {
-      res.status(404).json({ error: 'Recurso no encontrado' });
-    } else {
-      res.status(200).json({ mensaje: 'Recurso eliminado exitosamente' });
+      return res.status(500).json({ error: err.message });
     }
+
+    const queryDeleteRecurso = 'DELETE FROM Recurso_Educativo WHERE ID_Recurso = ?';
+    db.query(queryDeleteRecurso, [id], (err, results) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else if (results.affectedRows === 0) {
+        res.status(404).json({ error: 'Recurso no encontrado' });
+      } else {
+        res.status(200).json({ mensaje: 'Recurso eliminado exitosamente' });
+      }
+    });
   });
 };
-
 
 
 exports.AsignarCategoriaARecurso = (req, res) => {

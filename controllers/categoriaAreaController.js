@@ -19,6 +19,22 @@ exports.CrearArea = (req, res) => {
 };
 
 
+exports.ObtenerCategoriasPorIdArea = (req, res) => {
+  const { ID_Area } = req.params;
+
+  const query = 'SELECT * FROM Categoria WHERE ID_Area = ?';
+  db.query(query, [ID_Area], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else if (results.length === 0) {
+      res.status(404).json({ error: 'No se encontraron categorías para el área especificada' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};
+
+
 exports.ObtenerTodasAreas = (req, res) => {
   const query = 'SELECT * FROM Area';
   db.query(query, (err, results) => {
